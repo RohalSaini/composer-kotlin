@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1046522638250",
+    "project_id": "android-334407",
+    "storage_bucket": "android-334407.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046522638250:android:8e2133869159cf1bcc45d3",
+        "android_client_info": {
+          "package_name": "com.example.sanssystechnology"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046522638250-etpmeguco4f47lm2l34v44m92bitvtqu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sanssystechnology",
+            "certificate_hash": "97ef0ab1cefaae86c42e9fd3001ec20f06419a51"
+          }
+        },
+        {
+          "client_id": "1046522638250-b0dr0muqo2qm221pf8t5p2d18k9j3afh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0OOpu2Yn5swma_Ohps7Eje_fdPQ0DtSs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1046522638250-b0dr0muqo2qm221pf8t5p2d18k9j3afh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
