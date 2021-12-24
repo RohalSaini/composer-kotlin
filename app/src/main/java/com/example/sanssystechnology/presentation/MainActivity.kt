@@ -1,17 +1,19 @@
 package com.example.sanssystechnology.presentation
 
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.OvershootInterpolator
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +39,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             SanssysTechnologyTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     color = MaterialTheme.colors.background,
                     modifier = Modifier.fillMaxSize()
@@ -46,6 +47,21 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        //AlertDialogSample
+        //android.app.AlertDialog.Builder(this)
+
+        val builder = android.app.AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setMessage("Do you want to Exit?")
+        builder.setPositiveButton("Yes") { dialog, which -> //if user pressed "yes", then he is allowed to exit from application
+            super.onBackPressed()
+        }
+        builder.setNegativeButton("No") { dialog, which -> //if user select "No", just cancel this dialog and continue with app
+            dialog.cancel()
+        }.create().show()
     }
 }
 
@@ -60,7 +76,7 @@ fun Navigation(
         composable("splash_screen") {
             val context = LocalContext.current
             var session= Session(context)
-            if(session.loggedin()) {
+            if(!session.loggedin()) {
                 DrawerAppComponent(
                     navController, index = 0,
                     savedInstanceState
@@ -70,19 +86,13 @@ fun Navigation(
             }
         }
         composable("home") {
-            var nav = savedInstanceState?.getBundle("data")?.get("nav")
-            println("Nav controller name is : $nav")
            DrawerAppComponent(navController, index = 0 ,savedInstanceState)
         }
         composable("about") {
-            var nav = savedInstanceState?.getBundle("data")?.get("nav")
-            println("Nav controller name is : $nav")
-            DrawerAppComponent(navController, index = 1,savedInstanceState)
+           AboutScreen()
         }
         composable("contact") {
-            var nav = savedInstanceState?.getBundle("data")?.get("nav")
-            println("Nav controller name is : $nav")
-            DrawerAppComponent(navController, index = 2,savedInstanceState)
+            ContactScreen()
         }
         composable("login") {
             AuthScreen(navController = navController)
@@ -90,6 +100,7 @@ fun Navigation(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.DONUT)
 @Composable
 fun  SplashScreen(navController: NavController) {
     val scale = remember {
@@ -126,5 +137,4 @@ fun  SplashScreen(navController: NavController) {
         )
     }
 }
-
 

@@ -30,10 +30,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable
-fun AboutScreen(
-    drawerState :DrawerState,
-    openDrawer:()->Unit
-) {
+fun AboutScreen() {
     val scope = rememberCoroutineScope() // coro
     var getData = PersonRepository().getAllData()
     Column {
@@ -50,7 +47,7 @@ fun AboutScreen(
             navigationIcon = {
                 IconButton(onClick = {
                     scope.launch {
-                        drawerState.open()
+                        //drawerState.open()
                     }
                 }) {
                     Icon(

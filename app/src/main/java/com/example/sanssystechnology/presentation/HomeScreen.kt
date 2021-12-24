@@ -34,8 +34,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 @Composable
 fun HomeScreen(
-    drawerState: DrawerState,
-    openDrawer:()->Unit
+    drawerState: DrawerState
 )
 {
     val context = LocalContext.current

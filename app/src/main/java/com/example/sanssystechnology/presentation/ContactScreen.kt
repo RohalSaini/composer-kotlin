@@ -43,10 +43,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun ContactScreen(
-    drawerState: DrawerState,
-    openDrawer:()->Unit
-) {
+fun ContactScreen() {
     val scope = rememberCoroutineScope() // coro
     Column(
         modifier = Modifier
@@ -63,7 +60,7 @@ fun ContactScreen(
             navigationIcon = {
                 IconButton(onClick = {
                     scope.launch {
-                        drawerState.open()
+                        //drawerState.open()
                     }
                 }) {
                     Icon(

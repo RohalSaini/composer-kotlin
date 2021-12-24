@@ -1,6 +1,7 @@
 package com.example.sanssystechnology.presentation
 
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -22,10 +23,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
-import android.R
-import androidx.navigation.NavType
-import androidx.navigation.Navigator
-import androidx.navigation.navArgument
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.ui.platform.LocalContext
+import com.example.sanssystechnology.Session
 
 
 @ExperimentalFoundationApi
@@ -67,13 +68,9 @@ fun DrawerAppComponent(navController: NavController, index:Int, savedStateHandle
             )
         },
         content = {
-            BodyContentComponent(
-                currentScreen =state.value ,
-                openDrawer = {
-                    scope.launch {
-                        scaffoldState.drawerState.open()
-                    }
-                }, drawerState = scaffoldState.drawerState)
+            HomeScreen(
+                drawerState =scaffoldState.drawerState
+            )
         },
         drawerScrimColor = Color.Yellow.copy(alpha = 0.2f),
         drawerShape = CutCornerShape(topEnd = 68.dp)
@@ -89,8 +86,10 @@ fun DrawerContentComponent(
     drawerState:DrawerState
 )
 {
+    val openDialog = remember { mutableStateOf(false)  }
     /**set design*/
     Column (modifier = Modifier.fillMaxSize()){
+        val scope = rememberCoroutineScope() // coroutine scope
         for (index in DrawerAppScreen.values().indices){
             /**set Screen ,Icon and Color*/
             val screen = getScreenBasedOnIndex(index) // get screen name
@@ -102,12 +101,9 @@ fun DrawerContentComponent(
                     when (index) {
                         0 -> {
                             println(screen.name)
-                            savedStateHandle?.getBundle("data")?.putString("nav","home")
-                            //savedStateHandle?.putSerializable("nav","home")
-                            //savedStateHandle.set("nav","home")
-                            val bundle = Bundle()
-                            bundle.putString("link", "http://yourlink.com/policy")
-                            navController.navigate("home")
+                            scope.launch {
+                                drawerState.close()
+                            }
                         }
                         1 -> {
                             println(screen.name)
@@ -153,8 +149,38 @@ fun DrawerContentComponent(
                 }
             )
         }
-    }
+        Column(
+            modifier = Modifier.clickable {
+                                          openDialog.value = true
+            },
+            content = {
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colors.secondary,
+                ) {
+                    /**set Icon and Text*/
+                    Row{
+                        Image(modifier = Modifier.padding(7.dp),
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "close"
+                        )
+                        Text(text = "LogOut Screen",
+                            modifier = Modifier.padding(7.dp),
+                            style = TextStyle(
+                                fontSize = 17.sp,
+                                fontStyle = FontStyle.Normal,
+                                color = colors.error
+                            )
+                        )
+                    }
 
+                }
+            }
+        )
+    }
+    if (openDialog.value) {
+        AlertDialogSample(navController = navController,openDialog)
+    }
 }
 /**set Screen*/
 fun getScreenBasedOnIndex(index:Int)= when(index){
@@ -178,24 +204,52 @@ fun getColor(index:Int)= when(index){
     else->Color.Black
 }
 
-/**set BodyContentComponent*/
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
-@Composable
-fun BodyContentComponent(
-    currentScreen:DrawerAppScreen,
-    openDrawer:()->Unit,
-    drawerState: DrawerState
-
-)
-{
-    when(currentScreen){
-        DrawerAppScreen.Home -> HomeScreen(drawerState = drawerState,openDrawer =  openDrawer )
-        DrawerAppScreen.About -> AboutScreen(drawerState = drawerState,openDrawer =  openDrawer )
-        DrawerAppScreen.Contact -> ContactScreen(drawerState = drawerState,openDrawer =  openDrawer)
-    }
-
-}
 
 enum class DrawerAppScreen{Home,About,Contact}
 
+@Composable
+fun AlertDialogSample(navController: NavController, openDialog: MutableState<Boolean>) {
+    val context = LocalContext.current
+    AlertDialog(
+        onDismissRequest = {
+            // Dismiss the dialog when the user clicks outside the dialog or on the back
+            // button. If you want to disable that functionality, simply use an empty
+            // onCloseRequest.
+        },
+        title = {
+            Text(text = "Dialog Title")
+        },
+        text = {
+            Text("Here is a text ")
+        },
+        confirmButton = {
+            Button(
+
+                onClick = {
+                    var session= Session(context)
+                    session.setLoggedin(
+                        logggedin = false,
+                        name = "",
+                        id = "",
+                        emial = "",
+                        pass = ""
+                    )
+                    navController.navigate("login")
+                }) {
+                Text("This is the Confirm Button")
+            }
+        },
+        dismissButton = {
+            Button(
+
+                onClick = {
+                    openDialog.value = false
+                }) {
+                Text("This is the dismiss Button")
+            }
+        }
+    )
+    BackHandler(enabled = true){
+        println("I am from Home")
+    }
+}
